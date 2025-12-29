@@ -37,15 +37,6 @@ function draw() {
     pop();
   }
     
-    // 3. Animasi Melayang (Floating)
-    // Naik turun setinggi 0.2 meter
-    let hover = Math.sin(frameCount * 0.05) * 0.2;
-    translate(0, hover, 0);
-    
-    // 4. Animasi Rotasi
-    rotateY(frameCount * 0.5); 
-
-    // 5. Tampilkan Model
     scale(0.5); // Kecilkan 50%
     specularMaterial(50);
     noStroke();
