@@ -45,5 +45,12 @@ function draw() {
     
 }
 
+function mouseClicked() {
+   // Klik untuk play/pause BGM
+   if (humSound.isPlaying()) {
+     humSound.pause();
+   } else {
+     humSound.play();
+   }
 
 }
