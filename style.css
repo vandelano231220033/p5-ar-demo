@@ -1,0 +1,13 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+canvas {
+  display: block;
+  width: 100vw !important;
+  height: 100vh !important;
+}
+/* small helper for debug overlay if needed */
+.ar-debug {
+  position: absolute; top: 8px; left: 8px; color: white; font-family: sans-serif; z-index: 10;
+}
