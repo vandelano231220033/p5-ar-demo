@@ -7,7 +7,7 @@ let woodenTexture;
 function preload() {
   // optional assets; replace with your own files or comment out if unused
   try { humSound = loadSound('fire_crackling.mp3'); } catch(e){}
-  try { woodenBoxes = loadModel('wooden_boxes.obj', true); } catch(e){}
+  try { woodenBoxes = loadModel('Boxes.obj', true); } catch(e){}
   try { placementSound = loadSound('placement.mp3'); } catch(e){}
   try { woodenTexture = loadImage('wooden_texture.jpg'); } catch(e){}
 }
