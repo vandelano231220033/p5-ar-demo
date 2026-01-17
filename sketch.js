@@ -1,14 +1,13 @@
 let reticlePos = null;
 let humSound;
-let theCorridor;
-let theGate;
-let tex;
+let woodenBoxes;
+let placementSound;
 
 function preload() {
   // optional assets; replace with your own files or comment out if unused
   try { humSound = loadSound('fire_crackling.mp3'); } catch(e){}
-  try { theCorridor = loadModel('corridor.obj', true); } catch(e){}
-  try { theGate = loadModel('gate.obj', true); } catch(e){}
+  try { woodenBoxes = loadModel('wooden_boxes.obj', true); } catch(e){}
+  try { placementSound = loadSound('placement.mp3'); } catch(e){}
 }
 
 function setup() {
@@ -19,6 +18,7 @@ function setup() {
   // place anchor on tap/click
   AR.onSelect((anchor)=>{
     console.log('Placed anchor', anchor.id, anchor.pos);
+    if (placementSound && typeof placementSound.play === 'function') placementSound.play();
   });
 
   // show debug overlay
@@ -49,7 +49,7 @@ function draw() {
   // draw anchors
   AR.drawAnchors();
 
-  // Example: for each anchor, draw a rotating model/primitive
+  // Example: for each anchor, draw the wooden boxes model
   const anchors = AR.getAnchors();
   for (let a of anchors) {
     AR.transformToAnchor(a, ()=>{
@@ -57,12 +57,12 @@ function draw() {
       rotateY(frameCount * 0.02);
       scale(0.4);
       noStroke();
-      if (theCorridor) {
-        specularMaterial(200);
-        model(theCorridor);
+      if (woodenBoxes) {
+        specularMaterial(150, 100, 50); // wooden color
+        model(woodenBoxes);
       } else {
-        ambientMaterial(100,200,255);
-        box(0.3,0.3,0.3);
+        ambientMaterial(150, 100, 50); // fallback box
+        box(0.3, 0.3, 0.3);
       }
       pop();
     });
