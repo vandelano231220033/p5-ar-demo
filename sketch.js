@@ -2,12 +2,14 @@ let reticlePos = null;
 let humSound;
 let woodenBoxes;
 let placementSound;
+let woodenTexture;
 
 function preload() {
   // optional assets; replace with your own files or comment out if unused
   try { humSound = loadSound('fire_crackling.mp3'); } catch(e){}
   try { woodenBoxes = loadModel('wooden_boxes.obj', true); } catch(e){}
   try { placementSound = loadSound('placement.mp3'); } catch(e){}
+  try { woodenTexture = loadImage('wooden_texture.jpg'); } catch(e){}
 }
 
 function setup() {
@@ -57,11 +59,10 @@ function draw() {
       rotateY(frameCount * 0.02);
       scale(0.4);
       noStroke();
+      if (woodenTexture) texture(woodenTexture);
       if (woodenBoxes) {
-        specularMaterial(150, 100, 50); // wooden color
         model(woodenBoxes);
       } else {
-        ambientMaterial(150, 100, 50); // fallback box
         box(0.3, 0.3, 0.3);
       }
       pop();
