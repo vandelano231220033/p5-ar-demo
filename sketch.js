@@ -21,6 +21,9 @@ function setup() {
     console.log('Placed anchor', anchor.id, anchor.pos);
   });
 
+  // show debug overlay
+  AR.createDebugOverlay();
+
   // loop background sound if available
   if (humSound && typeof humSound.loop === 'function') humSound.loop();
 }

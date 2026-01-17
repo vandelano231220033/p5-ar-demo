@@ -1,22 +1,41 @@
 // Simple AR helper library for p5.js
-// Provides a fallback simulated AR experience (reticle + anchors)
+// Provides WebXR hit-test when available, fallback simulated AR experience (reticle + anchors)
 // Usage: AR.createARCanvas(WEBGL); AR.onSelect(cb); AR.getReticlePosition(); AR.drawAnchors();
 (function(global){
   const AR = {};
   let anchors = [];
   AR.reticleDistance = 2.0;
+  let isWebXR = false;
+  let xrHitResults = [];
 
   AR.createARCanvas = function(mode){
-    if (typeof createCanvas === 'function') {
-      if (mode === WEBGL) createCanvas(windowWidth, windowHeight, WEBGL);
-      else createCanvas(windowWidth, windowHeight);
+    // Check if p5.xr is loaded (it overrides createCanvas and adds createARCanvas)
+    if (typeof createARCanvas === 'function') {
+      createARCanvas(mode);
+      isWebXR = true;
+    } else {
+      if (typeof createCanvas === 'function') {
+        if (mode === WEBGL) createCanvas(windowWidth, windowHeight, WEBGL);
+        else createCanvas(windowWidth, windowHeight);
+      }
+      isWebXR = false;
     }
     window.addEventListener('resize', ()=>{ if (typeof resizeCanvas === 'function') resizeCanvas(windowWidth, windowHeight); });
   };
 
   // Returns {x,y,z,vec} where z is negative-forward in p5 WEBGL
   AR.getReticlePosition = function(){
-    // Map mouse position to a point in front of the camera at reticleDistance
+    if (isWebXR && typeof xrHitTest === 'function') {
+      // Use WebXR hit-test for real AR
+      xrHitResults = xrHitTest();
+      if (xrHitResults.length > 0) {
+        const hit = xrHitResults[0]; // first hit
+        const pos = hit.pose.transform.position;
+        const vec = (typeof createVector === 'function') ? createVector(pos.x, pos.y, pos.z) : {x:pos.x, y:pos.y, z:pos.z};
+        return {x: pos.x, y: pos.y, z: pos.z, vec};
+      }
+    }
+    // Fallback: Map mouse position to a point in front of the camera at reticleDistance
     // This is a simple, robust fallback for demos and works without WebXR.
     let nx = (typeof mouseX === 'number') ? (mouseX - (width/2)) / (width/2) : 0;
     let ny = (typeof mouseY === 'number') ? (mouseY - (height/2)) / (height/2) : 0;
@@ -80,6 +99,17 @@
     translate(anchor.pos.x, anchor.pos.y, anchor.pos.z);
     if (typeof drawFunc === 'function') drawFunc();
     pop();
+  };
+
+  AR.createDebugOverlay = function(){
+    const div = document.createElement('div');
+    div.className = 'ar-debug';
+    div.innerHTML = isWebXR ? 'WebXR Mode' : 'Fallback Mode';
+    document.body.appendChild(div);
+    // Update periodically
+    setInterval(() => {
+      div.innerHTML = isWebXR ? 'WebXR Mode' : 'Fallback Mode';
+    }, 1000);
   };
 
   // Expose to global scope
