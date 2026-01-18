@@ -45,19 +45,23 @@ function draw() {
     background(0);
   }
 
+  console.log('Draw loop, isWebXR:', window.isWebXR);
+
   // lighting
   ambientLight(120);
   directionalLight(255,255,255, 0,0,-1);
 
-  // reticle follows pointer (fallback behavior)
-  let pos = AR.getReticlePosition();
-  if (pos) {
-    push();
-    translate(pos.x, pos.y, pos.z);
-    noStroke();
-    emissiveMaterial(255,180,0);
-    torus(0.03, 0.006);
-    pop();
+  // reticle follows pointer (only in fallback mode)
+  if (!window.isWebXR) {
+    let pos = AR.getReticlePosition();
+    if (pos) {
+      push();
+      translate(pos.x, pos.y, pos.z);
+      noStroke();
+      emissiveMaterial(255,180,0);
+      torus(0.03, 0.006);
+      pop();
+    }
   }
 
   // draw anchors
