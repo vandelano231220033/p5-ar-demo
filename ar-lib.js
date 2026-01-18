@@ -113,3 +113,4 @@ AR.createDebugOverlay = function(){
 
 // Expose to global scope
 window.AR = AR;
+window.isWebXR = isWebXR;

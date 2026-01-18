@@ -26,12 +26,24 @@ function setup() {
   // show debug overlay
   AR.createDebugOverlay();
 
-  // loop background sound if available
-  if (humSound && typeof humSound.loop === 'function') humSound.loop();
+  // resume audio context for sounds
+  if (typeof getAudioContext === 'function') {
+    getAudioContext().resume().then(() => {
+      console.log('Audio context resumed');
+      // loop background sound if available
+      if (humSound && typeof humSound.loop === 'function') humSound.loop();
+    }).catch(err => console.log('Audio resume failed', err));
+  } else {
+    // fallback
+    if (humSound && typeof humSound.loop === 'function') humSound.loop();
+  }
 }
 
 function draw() {
-  background(0);
+  // In WebXR, don't set background to avoid blacking out camera feed
+  if (!window.isWebXR) {
+    background(0);
+  }
 
   // lighting
   ambientLight(120);
